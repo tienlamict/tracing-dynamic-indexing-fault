@@ -50,9 +50,9 @@ func (t *Tracer) Trace(lineNumber int, statement string, variables map[string]in
 
 // PrintTrace in ra trace đã ghi lại
 func (t *Tracer) PrintTrace() {
-	fmt.Println("\n📝 TRACE - THEO DẤU THỰC THI:")
+	fmt.Println("\nTRACE - THEO DAU THUC THI:")
 	fmt.Println("+------+---------------------------------------------+------------------------+")
-	fmt.Println("| Dòng | Câu lệnh                                    | Biến                   |")
+	fmt.Println("| Dong | Cau lenh                                    | Bien                   |")
 	fmt.Println("+------+---------------------------------------------+------------------------+")
 
 	for _, entry := range t.Entries {
@@ -71,7 +71,7 @@ func (t *Tracer) PrintTrace() {
 	}
 
 	fmt.Println("+------+---------------------------------------------+------------------------+")
-	fmt.Printf("\nTổng số câu lệnh đã thực thi: %d\n", len(t.Entries))
+	fmt.Printf("\nTong so cau lenh da thuc thi: %d\n", len(t.Entries))
 }
 
 // truncate cắt chuỗi nếu quá dài
@@ -84,8 +84,8 @@ func truncate(s string, maxLen int) string {
 
 // RunTracingDemo chạy demo tracing
 func RunTracingDemo() {
-	fmt.Println("\n🎯 Ví dụ: Tính giai thừa của một số")
-	fmt.Println("\nChương trình mẫu:")
+	fmt.Println("\nVi du: Tinh giai thua cua mot so")
+	fmt.Println("\nChuong trinh mau:")
 	fmt.Println("```")
 	fmt.Println("func factorial(n int) int {")
 	fmt.Println("    result := 1              // Line 1")
@@ -101,7 +101,7 @@ func RunTracingDemo() {
 
 	// Simulate factorial(5)
 	n := 5
-	fmt.Printf("\n▶ Chạy: factorial(%d)\n", n)
+	fmt.Printf("\nChay: factorial(%d)\n", n)
 
 	result := 1
 	tracer.Trace(1, "result := 1", map[string]interface{}{
@@ -130,67 +130,14 @@ func RunTracingDemo() {
 	// In trace
 	tracer.PrintTrace()
 
-	fmt.Println("\n📊 Phân tích:")
-	fmt.Println("- Tracing cho phép theo dõi toàn bộ quá trình thực thi")
-	fmt.Println("- Mỗi bước thực thi được ghi lại với giá trị biến tại thời điểm đó")
-	fmt.Println("- Hữu ích cho việc debug và hiểu luồng thực thi")
+	fmt.Println("\nPhan tich:")
+	fmt.Println("- Tracing cho phep theo doi toan bo qua trinh thuc thi")
+	fmt.Println("- Moi buoc thuc thi duoc ghi lai voi gia tri bien tai thoi diem do")
+	fmt.Println("- Huu ich cho viec debug va hieu luong thuc thi")
 
-	// Demo 2: Tìm số lớn nhất trong mảng
-	fmt.Println("\n" + "==============================================")
-	fmt.Println("\n🎯 Ví dụ 2: Tìm số lớn nhất trong mảng")
-	fmt.Println("\nChương trình mẫu:")
-	fmt.Println("```")
-	fmt.Println("func findMax(arr []int) int {")
-	fmt.Println("    max := arr[0]           // Line 1")
-	fmt.Println("    for i := 1; i < len(arr); i++ {  // Line 2")
-	fmt.Println("        if arr[i] > max {   // Line 3")
-	fmt.Println("            max = arr[i]    // Line 4")
-	fmt.Println("        }")
-	fmt.Println("    }")
-	fmt.Println("    return max              // Line 5")
-	fmt.Println("}")
-	fmt.Println("```")
-
-	tracer2 := NewTracer()
-	arr := []int{3, 7, 2, 9, 5, 1}
-	fmt.Printf("\n▶ Chạy: findMax(%v)\n", arr)
-
-	max := arr[0]
-	tracer2.Trace(1, "max := arr[0]", map[string]interface{}{
-		"arr": arr,
-		"max": max,
-	})
-
-	for i := 1; i < len(arr); i++ {
-		tracer2.Trace(2, fmt.Sprintf("for i := %d", i), map[string]interface{}{
-			"i":   i,
-			"max": max,
-		})
-
-		tracer2.Trace(3, fmt.Sprintf("if arr[%d]=%d > max=%d", i, arr[i], max), map[string]interface{}{
-			"i":      i,
-			"arr[i]": arr[i],
-			"max":    max,
-		})
-
-		if arr[i] > max {
-			max = arr[i]
-			tracer2.Trace(4, fmt.Sprintf("max = arr[%d] = %d", i, max), map[string]interface{}{
-				"i":   i,
-				"max": max,
-			})
-		}
-	}
-
-	tracer2.Trace(5, fmt.Sprintf("return %d", max), map[string]interface{}{
-		"max": max,
-	})
-
-	tracer2.PrintTrace()
-
-	fmt.Println("\n📊 Lợi ích của Tracing:")
-	fmt.Println("✓ Hiểu rõ luồng thực thi chương trình")
-	fmt.Println("✓ Phát hiện lỗi logic")
-	fmt.Println("✓ Kiểm tra giá trị biến qua từng bước")
-	fmt.Println("✓ Phân tích hiệu năng")
+	fmt.Println("\nUng dung cua Tracing:")
+	fmt.Println("+ Hieu ro luong thuc thi chuong trinh")
+	fmt.Println("+ Phat hien loi logic")
+	fmt.Println("+ Kiem tra gia tri bien qua tung buoc")
+	fmt.Println("+ Phan tich hieu nang")
 }

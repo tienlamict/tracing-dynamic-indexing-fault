@@ -103,9 +103,9 @@ func (ei *ExecutionIndexer) FindExecutionsByLine(lineNumber int) []ExecutionInde
 
 // PrintExecutionIndex in execution index
 func (ei *ExecutionIndexer) PrintExecutionIndex() {
-	fmt.Println("\n📑 EXECUTION INDEX - ĐÁNH CHỈ MỤC THỰC THI:")
+	fmt.Println("\nEXECUTION INDEX - DANH CHI MUC THUC THI:")
 	fmt.Println("+-------+------+------+----------------------------------------+-----------------+")
-	fmt.Println("| Index | Dòng | TID  | Câu lệnh                               | Biến            |")
+	fmt.Println("| Index | Dong | TID  | Cau lenh                               | Bien            |")
 	fmt.Println("+-------+------+------+----------------------------------------+-----------------+")
 
 	for _, idx := range ei.Indices {
@@ -126,16 +126,16 @@ func (ei *ExecutionIndexer) PrintExecutionIndex() {
 	}
 
 	fmt.Println("+-------+------+------+----------------------------------------+-----------------+")
-	fmt.Printf("\nTổng số execution index: %d\n", len(ei.Indices))
+	fmt.Printf("\nTong so execution index: %d\n", len(ei.Indices))
 }
 
 // PrintExecutionsByLine in các thực thi theo dòng
 func (ei *ExecutionIndexer) PrintExecutionsByLine(lineNumber int) {
 	executions := ei.FindExecutionsByLine(lineNumber)
 
-	fmt.Printf("\n🔍 Tìm các lần thực thi dòng %d:\n", lineNumber)
+	fmt.Printf("\nTim cac lan thuc thi dong %d:\n", lineNumber)
 	fmt.Println("+-------+----------------------------------------+-----------------+")
-	fmt.Println("| Index | Câu lệnh                               | Biến            |")
+	fmt.Println("| Index | Cau lenh                               | Bien            |")
 	fmt.Println("+-------+----------------------------------------+-----------------+")
 
 	for _, idx := range executions {
@@ -154,7 +154,7 @@ func (ei *ExecutionIndexer) PrintExecutionsByLine(lineNumber int) {
 	}
 
 	fmt.Println("+-------+----------------------------------------+-----------------+")
-	fmt.Printf("Tổng: %d lần thực thi\n", len(executions))
+	fmt.Printf("Tong: %d lan thuc thi\n", len(executions))
 }
 
 func truncate(s string, maxLen int) string {
@@ -166,8 +166,8 @@ func truncate(s string, maxLen int) string {
 
 // RunExecutionIndexingDemo chạy demo
 func RunExecutionIndexingDemo() {
-	fmt.Println("\n🎯 Ví dụ 1: Tính tổng các số từ 1 đến n")
-	fmt.Println("\nChương trình mẫu:")
+	fmt.Println("\nVi du: Tinh tong cac so tu 1 den n")
+	fmt.Println("\nChuong trinh mau:")
 	fmt.Println("```")
 	fmt.Println("1: n := 5")
 	fmt.Println("2: sum := 0")
@@ -203,124 +203,43 @@ func RunExecutionIndexingDemo() {
 	indexer.PrintExecutionIndex()
 
 	// Phân tích
-	fmt.Println("\n📊 Phân tích:")
-	fmt.Println("- Mỗi lần thực thi được gán một index duy nhất")
-	fmt.Println("- Index tăng dần theo thứ tự thời gian")
-	fmt.Println("- Có thể tra cứu trạng thái tại bất kỳ thời điểm nào")
+	fmt.Println("\nPhan tich:")
+	fmt.Println("- Moi lan thuc thi duoc gan mot index duy nhat")
+	fmt.Println("- Index tang dan theo thu tu thoi gian")
+	fmt.Println("- Co the tra cuu trang thai tai bat ky thoi diem nao")
 
 	// Tìm các lần thực thi dòng 4
-	fmt.Println("\n" + "==============================================")
+	fmt.Println("\n==============================================")
 	indexer.PrintExecutionsByLine(4)
 
 	// Demo query
-	fmt.Println("\n" + "==============================================")
-	fmt.Println("\n🔎 Query: Lấy thực thi tại index 7")
+	fmt.Println("\n==============================================")
+	fmt.Println("\nQuery: Lay thuc thi tai index 7")
 	exec := indexer.GetExecutionAtIndex(7)
 	if exec != nil {
-		fmt.Printf("  Dòng %d: %s\n", exec.LineNumber, exec.Statement)
-		fmt.Printf("  Biến: %v\n", exec.Variables)
+		fmt.Printf("  Dong %d: %s\n", exec.LineNumber, exec.Statement)
+		fmt.Printf("  Bien: %v\n", exec.Variables)
 	}
 
-	fmt.Println("\n🔎 Query: Lấy thực thi từ index 5 đến 10")
+	fmt.Println("\nQuery: Lay thuc thi tu index 5 den 10")
 	execs := indexer.GetExecutionsBetween(5, 10)
-	fmt.Printf("  Tìm thấy %d thực thi\n", len(execs))
+	fmt.Printf("  Tim thay %d thuc thi\n", len(execs))
 	for _, e := range execs {
-		fmt.Printf("  [%d] Dòng %d: %s\n", e.Index, e.LineNumber, e.Statement)
+		fmt.Printf("  [%d] Dong %d: %s\n", e.Index, e.LineNumber, e.Statement)
 	}
 
-	// Demo 2: Nested loops
-	fmt.Println("\n" + "==============================================")
-	demo2()
-
-	// Demo 3: Multi-threading simulation
-	fmt.Println("\n" + "==============================================")
-	demo3()
+	fmt.Println("\nUng dung Execution Indexing:")
+	fmt.Println("+ Debugging: Xac dinh chinh xac thoi diem loi xay ra")
+	fmt.Println("+ Time-travel debugging: Quay lai trang thai truoc do")
+	fmt.Println("+ Multi-threading: Phan tich interleaving")
+	fmt.Println("+ Record & Replay: Tai hien lai execution")
 }
 
 func demo2() {
-	fmt.Println("\n🎯 Ví dụ 2: Vòng lặp lồng nhau (nested loops)")
-	fmt.Println("\nChương trình mẫu:")
-	fmt.Println("```")
-	fmt.Println("1: for i := 1; i <= 3; i++ {")
-	fmt.Println("2:     for j := 1; j <= 2; j++ {")
-	fmt.Println("3:         print(i, j)")
-	fmt.Println("4:     }")
-	fmt.Println("5: }")
-	fmt.Println("```")
-
-	indexer := NewExecutionIndexer()
-
-	for i := 1; i <= 3; i++ {
-		indexer.RecordExecution(1, fmt.Sprintf("for i := %d", i), map[string]interface{}{"i": i})
-
-		for j := 1; j <= 2; j++ {
-			indexer.RecordExecution(2, fmt.Sprintf("for j := %d", j), map[string]interface{}{
-				"i": i, "j": j,
-			})
-			indexer.RecordExecution(3, fmt.Sprintf("print(%d, %d)", i, j), map[string]interface{}{
-				"i": i, "j": j,
-			})
-		}
-	}
-
-	indexer.PrintExecutionIndex()
-
-	fmt.Println("\n💡 Lợi ích:")
-	fmt.Println("- Execution Index giúp phân biệt các lần thực thi khác nhau")
-	fmt.Println("- Hữu ích với loops: cùng dòng code nhưng giá trị khác nhau")
-	fmt.Println("- Có thể replay chương trình từ bất kỳ index nào")
+	// Removed - chỉ giữ 1 ví dụ
 }
 
 func demo3() {
-	fmt.Println("\n🎯 Ví dụ 3: Mô phỏng đa luồng (Multi-threading)")
-	fmt.Println("\nChương trình mẫu (2 threads):")
-	fmt.Println("```")
-	fmt.Println("Thread 1:")
-	fmt.Println("1: x := 0")
-	fmt.Println("2: x = x + 1")
-	fmt.Println("3: x = x + 2")
-	fmt.Println("")
-	fmt.Println("Thread 2:")
-	fmt.Println("4: y := 0")
-	fmt.Println("5: y = y + 10")
-	fmt.Println("6: y = y + 20")
-	fmt.Println("```")
-
-	indexer := NewExecutionIndexer()
-
-	// Mô phỏng interleaving execution
-	x := 0
-	y := 0
-
-	// Thread 1 bắt đầu
-	indexer.RecordExecutionWithThread(1, "x := 0", map[string]interface{}{"x": x}, 1)
-
-	// Thread 2 bắt đầu
-	indexer.RecordExecutionWithThread(4, "y := 0", map[string]interface{}{"y": y}, 2)
-
-	// Thread 1 tiếp tục
-	x = x + 1
-	indexer.RecordExecutionWithThread(2, "x = x + 1", map[string]interface{}{"x": x}, 1)
-
-	// Thread 2 tiếp tục
-	y = y + 10
-	indexer.RecordExecutionWithThread(5, "y = y + 10", map[string]interface{}{"y": y}, 2)
-
-	// Thread 1 kết thúc
-	x = x + 2
-	indexer.RecordExecutionWithThread(3, "x = x + 2", map[string]interface{}{"x": x}, 1)
-
-	// Thread 2 kết thúc
-	y = y + 20
-	indexer.RecordExecutionWithThread(6, "y = y + 20", map[string]interface{}{"y": y}, 2)
-
-	indexer.PrintExecutionIndex()
-
-	fmt.Println("\n💡 Ứng dụng Execution Indexing:")
-	fmt.Println("✓ Debugging: Xác định chính xác thời điểm lỗi xảy ra")
-	fmt.Println("✓ Time-travel debugging: Quay lại trạng thái trước đó")
-	fmt.Println("✓ Multi-threading: Phân tích interleaving")
-	fmt.Println("✓ Record & Replay: Tái hiện lại execution")
-	fmt.Println("✓ Distributed systems: Ordering events")
+	// Removed - chỉ giữ 1 ví dụ
 }
 

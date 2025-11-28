@@ -16,47 +16,47 @@ func main() {
 
 	for {
 		printMenu()
-		fmt.Print("Nhập lựa chọn của bạn (1-5): ")
+		fmt.Print("Nhap lua chon cua ban (1-5): ")
 
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
 		switch input {
 		case "1":
-			fmt.Println("\n========== TRACING - THEO DẤU THỰC THI ==========")
+			fmt.Println("\n========== TRACING - THEO DAU THUC THI ==========")
 			tracing.RunTracingDemo()
 		case "2":
-			fmt.Println("\n========== DYNAMIC SLICING - CẮT ĐỘNG ==========")
+			fmt.Println("\n========== DYNAMIC SLICING - CAT DONG ==========")
 			dynamicslicing.RunDynamicSlicingDemo()
 		case "3":
-			fmt.Println("\n========== EXECUTION INDEXING - ĐÁNH CHỈ MỤC ==========")
+			fmt.Println("\n========== EXECUTION INDEXING - DANH CHI MUC ==========")
 			executionindexing.RunExecutionIndexingDemo()
 		case "4":
-			fmt.Println("\n========== FAULT LOCALIZATION - ĐỊNH VỊ LỖI ==========")
+			fmt.Println("\n========== FAULT LOCALIZATION - DINH VI LOI ==========")
 			faultlocalization.RunFaultLocalizationDemo()
 		case "5":
-			fmt.Println("\nCảm ơn bạn đã sử dụng chương trình!")
+			fmt.Println("\nCam on ban da su dung chuong trinh!")
 			return
 		default:
-			fmt.Println("\n❌ Lựa chọn không hợp lệ! Vui lòng chọn từ 1-5.")
+			fmt.Println("\nLua chon khong hop le! Vui long chon tu 1-5.")
 		}
 
 		fmt.Println("\n" + strings.Repeat("=", 60))
-		fmt.Print("\nNhấn Enter để tiếp tục...")
+		fmt.Print("\nNhan Enter de tiep tuc...")
 		reader.ReadString('\n')
 		fmt.Println()
 	}
 }
 
 func printMenu() {
-	fmt.Println("╔════════════════════════════════════════════════════════════╗")
-	fmt.Println("║        PHÂN TÍCH CHƯƠNG TRÌNH - PROGRAM ANALYSIS          ║")
-	fmt.Println("╠════════════════════════════════════════════════════════════╣")
-	fmt.Println("║  1. Tracing - Theo dấu thực thi chương trình              ║")
-	fmt.Println("║  2. Dynamic Slicing - Cắt động chương trình               ║")
-	fmt.Println("║  3. Execution Indexing - Đánh chỉ mục thực thi            ║")
-	fmt.Println("║  4. Fault Localization - Định vị lỗi                      ║")
-	fmt.Println("║  5. Thoát                                                  ║")
-	fmt.Println("╚════════════════════════════════════════════════════════════╝")
+	fmt.Println("============================================================")
+	fmt.Println("        PHAN TICH CHUONG TRINH - PROGRAM ANALYSIS")
+	fmt.Println("============================================================")
+	fmt.Println("  1. Tracing - Theo dau thuc thi chuong trinh")
+	fmt.Println("  2. Dynamic Slicing - Cat dong chuong trinh")
+	fmt.Println("  3. Execution Indexing - Danh chi muc thuc thi")
+	fmt.Println("  4. Fault Localization - Dinh vi loi")
+	fmt.Println("  5. Thoat")
+	fmt.Println("============================================================")
 }
 

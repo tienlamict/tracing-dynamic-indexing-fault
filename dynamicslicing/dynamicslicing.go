@@ -131,14 +131,14 @@ func contains(slice []int, val int) bool {
 
 // PrintSlice in dynamic slice
 func (ds *DynamicSlicer) PrintSlice(slice []int) {
-	fmt.Println("\n🔪 DYNAMIC SLICE:")
+	fmt.Println("\nDYNAMIC SLICE:")
 	fmt.Printf("Slicing Criterion: <%d, %s>\n\n",
 		ds.SlicingCriterion.LineNumber,
 		ds.SlicingCriterion.Variable)
 
-	fmt.Println("Các dòng ảnh hưởng đến biến '" + ds.SlicingCriterion.Variable + "':")
+	fmt.Println("Cac dong anh huong den bien '" + ds.SlicingCriterion.Variable + "':")
 	fmt.Println("+------+--------------------------------------------------+")
-	fmt.Println("| Dòng | Câu lệnh                                         |")
+	fmt.Println("| Dong | Cau lenh                                         |")
 	fmt.Println("+------+--------------------------------------------------+")
 
 	for _, lineNum := range slice {
@@ -151,9 +151,9 @@ func (ds *DynamicSlicer) PrintSlice(slice []int) {
 	}
 
 	fmt.Println("+------+--------------------------------------------------+")
-	fmt.Printf("\nSố dòng trong slice: %d\n", len(slice))
-	fmt.Printf("Tổng số dòng thực thi: %d\n", len(ds.ExecutionTrace))
-	fmt.Printf("Tỷ lệ rút gọn: %.1f%%\n", float64(len(slice))*100/float64(len(ds.ExecutionTrace)))
+	fmt.Printf("\nSo dong trong slice: %d\n", len(slice))
+	fmt.Printf("Tong so dong thuc thi: %d\n", len(ds.ExecutionTrace))
+	fmt.Printf("Ti le rut gon: %.1f%%\n", float64(len(slice))*100/float64(len(ds.ExecutionTrace)))
 }
 
 func truncate(s string, maxLen int) string {
@@ -165,8 +165,8 @@ func truncate(s string, maxLen int) string {
 
 // RunDynamicSlicingDemo chạy demo
 func RunDynamicSlicingDemo() {
-	fmt.Println("\n🎯 Ví dụ: Tính tổng và tích của dãy số")
-	fmt.Println("\nChương trình mẫu:")
+	fmt.Println("\nVi du: Tinh tong va tich cua day so")
+	fmt.Println("\nChuong trinh mau:")
 	fmt.Println("```")
 	fmt.Println(" 1: sum := 0")
 	fmt.Println(" 2: product := 1")
@@ -192,118 +192,49 @@ func RunDynamicSlicingDemo() {
 	slicer.AddStatement(8, "print(result)", []string{}, []string{"result"})
 
 	// Ghi lại execution trace
-	fmt.Println("\n▶ Thực thi chương trình:")
+	fmt.Println("\nThuc thi chuong trinh:")
 	slicer.RecordExecution(1)
-	fmt.Println("  Dòng 1: sum := 0")
+	fmt.Println("  Dong 1: sum := 0")
 
 	slicer.RecordExecution(2)
-	fmt.Println("  Dòng 2: product := 1")
+	fmt.Println("  Dong 2: product := 1")
 
 	for i := 1; i <= 5; i++ {
 		slicer.RecordExecution(3)
-		fmt.Printf("  Dòng 3: i = %d\n", i)
+		fmt.Printf("  Dong 3: i = %d\n", i)
 
 		slicer.RecordExecution(4)
-		fmt.Printf("  Dòng 4: sum = sum + %d\n", i)
+		fmt.Printf("  Dong 4: sum = sum + %d\n", i)
 
 		slicer.RecordExecution(5)
-		fmt.Printf("  Dòng 5: product = product * %d\n", i)
+		fmt.Printf("  Dong 5: product = product * %d\n", i)
 	}
 
 	slicer.RecordExecution(7)
-	fmt.Println("  Dòng 7: result := sum + product")
+	fmt.Println("  Dong 7: result := sum + product")
 
 	slicer.RecordExecution(8)
-	fmt.Println("  Dòng 8: print(result)")
+	fmt.Println("  Dong 8: print(result)")
 
 	// Tính slice cho biến 'sum' tại dòng 7
-	fmt.Println("\n" + "==============================================")
-	fmt.Println("\n📊 Case 1: Slice cho biến 'sum' tại dòng 7")
+	fmt.Println("\n==============================================")
+	fmt.Println("\nSlice cho bien 'sum' tai dong 7:")
 	slice1 := slicer.ComputeSlice(7, "sum")
 	slicer.PrintSlice(slice1)
 
-	fmt.Println("\n💡 Giải thích:")
-	fmt.Println("- Các dòng 1, 3, 4 ảnh hưởng đến giá trị của 'sum'")
-	fmt.Println("- Dòng 5 (liên quan đến product) KHÔNG có trong slice")
-	fmt.Println("- Dynamic slicing giúp loại bỏ code không liên quan")
+	fmt.Println("\nGiai thich:")
+	fmt.Println("- Cac dong 1, 3, 4 anh huong den gia tri cua 'sum'")
+	fmt.Println("- Dong 5 (lien quan den product) KHONG co trong slice")
+	fmt.Println("- Dynamic slicing giup loai bo code khong lien quan")
 
-	// Tính slice cho biến 'product' tại dòng 7
-	fmt.Println("\n" + "==============================================")
-	fmt.Println("\n📊 Case 2: Slice cho biến 'product' tại dòng 7")
-	slice2 := slicer.ComputeSlice(7, "product")
-	slicer.PrintSlice(slice2)
-
-	fmt.Println("\n💡 Giải thích:")
-	fmt.Println("- Các dòng 2, 3, 5 ảnh hưởng đến giá trị của 'product'")
-	fmt.Println("- Dòng 4 (liên quan đến sum) KHÔNG có trong slice")
-	fmt.Println("- Slice khác nhau tùy thuộc vào biến quan tâm")
-
-	// Ví dụ 2: Tìm max với điều kiện
-	fmt.Println("\n" + "==============================================")
-	demo2()
+	fmt.Println("\nUng dung cua Dynamic Slicing:")
+	fmt.Println("+ Debugging: Tim code anh huong den bug")
+	fmt.Println("+ Program comprehension: Hieu code de hon")
+	fmt.Println("+ Testing: Tap trung test case vao phan lien quan")
+	fmt.Println("+ Maintenance: Danh gia impact khi thay doi code")
 }
 
 func demo2() {
-	fmt.Println("\n🎯 Ví dụ 2: Tìm số chẵn lớn nhất")
-	fmt.Println("\nChương trình mẫu:")
-	fmt.Println("```")
-	fmt.Println(" 1: arr := [3, 8, 2, 9, 4]")
-	fmt.Println(" 2: max := -1")
-	fmt.Println(" 3: found := false")
-	fmt.Println(" 4: for i := 0; i < len(arr); i++ {")
-	fmt.Println(" 5:     if arr[i] % 2 == 0 {")
-	fmt.Println(" 6:         if arr[i] > max {")
-	fmt.Println(" 7:             max = arr[i]")
-	fmt.Println(" 8:             found = true")
-	fmt.Println(" 9:         }")
-	fmt.Println("10:     }")
-	fmt.Println("11: }")
-	fmt.Println("12: print(max)")
-	fmt.Println("```")
-
-	slicer := NewDynamicSlicer()
-
-	// Thêm statements
-	slicer.AddStatement(1, "arr := [3, 8, 2, 9, 4]", []string{"arr"}, []string{})
-	slicer.AddStatement(2, "max := -1", []string{"max"}, []string{})
-	slicer.AddStatement(3, "found := false", []string{"found"}, []string{})
-	slicer.AddStatement(4, "for i := 0; i < len(arr); i++", []string{"i"}, []string{"arr"})
-	slicer.AddStatement(5, "if arr[i] % 2 == 0", []string{}, []string{"arr", "i"})
-	slicer.AddStatement(6, "if arr[i] > max", []string{}, []string{"arr", "i", "max"})
-	slicer.AddStatement(7, "max = arr[i]", []string{"max"}, []string{"arr", "i"})
-	slicer.AddStatement(8, "found = true", []string{"found"}, []string{})
-	slicer.AddStatement(12, "print(max)", []string{}, []string{"max"})
-
-	// Simulate execution
-	fmt.Println("\n▶ Thực thi:")
-	arr := []int{3, 8, 2, 9, 4}
-	slicer.RecordExecution(1)
-	slicer.RecordExecution(2)
-	slicer.RecordExecution(3)
-
-	for i := 0; i < len(arr); i++ {
-		slicer.RecordExecution(4)
-		slicer.RecordExecution(5)
-
-		if arr[i]%2 == 0 {
-			fmt.Printf("  i=%d, arr[%d]=%d (chẵn)\n", i, i, arr[i])
-			slicer.RecordExecution(6)
-			if arr[i] > -1 {
-				slicer.RecordExecution(7)
-				slicer.RecordExecution(8)
-			}
-		}
-	}
-	slicer.RecordExecution(12)
-
-	fmt.Println("\n📊 Slice cho biến 'max' tại dòng 12:")
-	slice := slicer.ComputeSlice(12, "max")
-	slicer.PrintSlice(slice)
-
-	fmt.Println("\n💡 Ứng dụng của Dynamic Slicing:")
-	fmt.Println("✓ Debugging: Tìm code ảnh hưởng đến bug")
-	fmt.Println("✓ Program comprehension: Hiểu code dễ hơn")
-	fmt.Println("✓ Testing: Tập trung test case vào phần liên quan")
-	fmt.Println("✓ Maintenance: Đánh giá impact khi thay đổi code")
+	// Removed - chỉ giữ 1 ví dụ
 }
 

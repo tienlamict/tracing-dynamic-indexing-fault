@@ -204,15 +204,15 @@ func contains(slice []int, val int) bool {
 
 // PrintTestResults in kết quả test
 func (fl *FaultLocalizer) PrintTestResults() {
-	fmt.Println("\n🧪 KẾT QUẢ TEST CASES:")
+	fmt.Println("\nKET QUA TEST CASES:")
 	fmt.Println("+------------------+-------------+------------------+")
-	fmt.Println("| Test Case        | Kết quả     | Execution Trace  |")
+	fmt.Println("| Test Case        | Ket qua     | Execution Trace  |")
 	fmt.Println("+------------------+-------------+------------------+")
 
 	for _, tc := range fl.TestCases {
-		status := "❌ FAILED"
+		status := "FAILED"
 		if tc.Passed {
-			status = "✓ PASSED"
+			status = "PASSED"
 		}
 
 		traceStr := fmt.Sprintf("%v", tc.Trace)
@@ -234,14 +234,14 @@ func (fl *FaultLocalizer) PrintTestResults() {
 			failed++
 		}
 	}
-	fmt.Printf("\nTổng: %d tests (%d passed, %d failed)\n", len(fl.TestCases), passed, failed)
+	fmt.Printf("\nTong: %d tests (%d passed, %d failed)\n", len(fl.TestCases), passed, failed)
 }
 
 // PrintSuspiciousScores in điểm nghi ngờ
 func (fl *FaultLocalizer) PrintSuspiciousScores(method string) {
-	fmt.Printf("\n🔍 SUSPICIOUS SCORES (Phương pháp: %s):\n", method)
+	fmt.Printf("\nSUSPICIOUS SCORES (Phuong phap: %s):\n", method)
 	fmt.Println("+------+---------------------------------------+-------+--------+--------+")
-	fmt.Println("| Dòng | Statement                             | Score | Failed | Passed |")
+	fmt.Println("| Dong | Statement                             | Score | Failed | Passed |")
 	fmt.Println("+------+---------------------------------------+-------+--------+--------+")
 
 	for _, score := range fl.Scores {
@@ -269,17 +269,17 @@ func (fl *FaultLocalizer) PrintSuspiciousScores(method string) {
 		}
 
 		if len(topLines) == 1 {
-			fmt.Printf("\n⚠️  Dòng nghi ngờ nhất: Dòng %d (Score: %.3f)\n",
+			fmt.Printf("\nDong nghi ngo nhat: Dong %d (Score: %.3f)\n",
 				topLines[0], maxScore)
 		} else {
-			fmt.Printf("\n⚠️  Các dòng có điểm nghi ngờ cao nhất (Score: %.3f):\n", maxScore)
-			fmt.Printf("   Dòng: %v\n", topLines)
-			fmt.Printf("   → Ưu tiên: Dòng %d (xuất hiện %d lần trong failed tests)\n",
+			fmt.Printf("\nCac dong co diem nghi ngo cao nhat (Score: %.3f):\n", maxScore)
+			fmt.Printf("   Dong: %v\n", topLines)
+			fmt.Printf("   Uu tien: Dong %d (xuat hien %d lan trong failed tests)\n",
 				fl.Scores[0].LineNumber, fl.Scores[0].FailedCount)
-			fmt.Println("\n💡 Tie-breaking strategy:")
-			fmt.Println("   1. Điểm nghi ngờ (suspicious score)")
-			fmt.Println("   2. Số lần xuất hiện trong failed tests")
-			fmt.Println("   3. Số dòng nhỏ hơn")
+			fmt.Println("\nTie-breaking strategy:")
+			fmt.Println("   1. Diem nghi ngo (suspicious score)")
+			fmt.Println("   2. So lan xuat hien trong failed tests")
+			fmt.Println("   3. So dong nho hon")
 		}
 	}
 }
@@ -293,8 +293,8 @@ func truncate(s string, maxLen int) string {
 
 // RunFaultLocalizationDemo chạy demo
 func RunFaultLocalizationDemo() {
-	fmt.Println("\n🎯 Ví dụ: Tìm lỗi trong hàm tính trung bình")
-	fmt.Println("\nChương trình có lỗi:")
+	fmt.Println("\nVi du: Tim loi trong ham tinh trung binh")
+	fmt.Println("\nChuong trinh co loi:")
 	fmt.Println("```")
 	fmt.Println(" 1: func average(arr []int) float64 {")
 	fmt.Println(" 2:     sum := 0")
@@ -345,104 +345,29 @@ func RunFaultLocalizationDemo() {
 	localizer.PrintTestResults()
 
 	// Phân tích với Tarantula
-	fmt.Println("\n" + "==============================================")
+	fmt.Println("\n==============================================")
 	localizer.CalculateTarantula()
 	localizer.PrintSuspiciousScores("Tarantula")
 
-	// Phân tích với Ochiai
-	fmt.Println("\n" + "==============================================")
-	localizer.CalculateOchiai()
-	localizer.PrintSuspiciousScores("Ochiai")
+	fmt.Println("\nGiai thich:")
+	fmt.Println("- Dong 6 co diem nghi ngo cao nhat vi:")
+	fmt.Println("  + Xuat hien trong TAT CA failed tests (2/2)")
+	fmt.Println("  + Xuat hien trong TAT CA passed tests (4/4)")
+	fmt.Println("  + Ratio: failed/(failed+passed) cao")
+	fmt.Println("- Loi: Chia integer thay vi chia float")
+	fmt.Println("- Sua: avg := float64(sum) / float64(len(arr))")
+	fmt.Println("\nTai sao cac dong khac co cung diem?")
+	fmt.Println("- Cac dong nhu 7, 5, 4, 3 deu duoc thuc thi trong moi test")
+	fmt.Println("- Chung co cung ty le failed/passed")
+	fmt.Println("- Tie-breaking: Uu tien dong co nhieu failed count va line number nho hon")
 
-	fmt.Println("\n💡 Giải thích:")
-	fmt.Println("- Dòng 6 có điểm nghi ngờ cao nhất vì:")
-	fmt.Println("  • Xuất hiện trong TẤT CẢ failed tests (2/2)")
-	fmt.Println("  • Xuất hiện trong TẤT CẢ passed tests (4/4)")
-	fmt.Println("  • Ratio: failed/(failed+passed) cao")
-	fmt.Println("- Lỗi: Chia integer thay vì chia float")
-	fmt.Println("- Sửa: avg := float64(sum) / float64(len(arr))")
-	fmt.Println("\n🔍 Tại sao các dòng khác có cùng điểm?")
-	fmt.Println("- Các dòng như 7, 5, 4, 3 đều được thực thi trong mọi test")
-	fmt.Println("- Chúng có cùng tỷ lệ failed/passed")
-	fmt.Println("- Tie-breaking: Ưu tiên dòng có nhiều failed count và line number nhỏ hơn")
-
-	// Demo 2
-	fmt.Println("\n" + "==============================================")
-	demo2()
+	fmt.Println("\nUng dung cua Fault Localization:")
+	fmt.Println("+ Tu dong phat hien vi tri co kha nang chua loi")
+	fmt.Println("+ Giam thoi gian debug")
+	fmt.Println("+ Uu tien kiem tra cac dong co diem cao")
+	fmt.Println("+ Ket hop voi test suite de phan tich")
 }
 
 func demo2() {
-	fmt.Println("\n🎯 Ví dụ 2: Tìm lỗi trong hàm tìm max")
-	fmt.Println("\nChương trình có lỗi:")
-	fmt.Println("```")
-	fmt.Println(" 1: func findMax(arr []int) int {")
-	fmt.Println(" 2:     max := 0  // BUG: Nếu tất cả số âm thì sai!")
-	fmt.Println(" 3:     for i := 0; i < len(arr); i++ {")
-	fmt.Println(" 4:         if arr[i] > max {")
-	fmt.Println(" 5:             max = arr[i]")
-	fmt.Println(" 6:         }")
-	fmt.Println(" 7:     }")
-	fmt.Println(" 8:     return max")
-	fmt.Println(" 9: }")
-	fmt.Println("```")
-
-	localizer := NewFaultLocalizer()
-
-	localizer.AddStatement(1, "func findMax(arr []int) int")
-	localizer.AddStatement(2, "max := 0")
-	localizer.AddStatement(3, "for i := 0; i < len(arr); i++")
-	localizer.AddStatement(4, "if arr[i] > max")
-	localizer.AddStatement(5, "max = arr[i]")
-	localizer.AddStatement(6, "}")
-	localizer.AddStatement(7, "}")
-	localizer.AddStatement(8, "return max")
-
-	// Test cases
-	localizer.AddTestCase("Test 1", map[string]interface{}{"arr": []int{1, 5, 3}},
-		5, true, []int{1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 6, 7, 8})
-
-	localizer.AddTestCase("Test 2", map[string]interface{}{"arr": []int{10, 2, 8}},
-		10, true, []int{1, 2, 3, 4, 5, 3, 4, 3, 4, 6, 7, 8})
-
-	localizer.AddTestCase("Test 3", map[string]interface{}{"arr": []int{-5, -2, -8}},
-		-2, false, []int{1, 2, 3, 4, 3, 4, 3, 4, 6, 7, 8}) // FAILED: Trả về 0
-
-	localizer.AddTestCase("Test 4", map[string]interface{}{"arr": []int{-10, -20, -5}},
-		-5, false, []int{1, 2, 3, 4, 3, 4, 3, 4, 6, 7, 8}) // FAILED
-
-	localizer.AddTestCase("Test 5", map[string]interface{}{"arr": []int{3, 7, 2}},
-		7, true, []int{1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 6, 7, 8})
-
-	localizer.PrintTestResults()
-
-	fmt.Println("\n" + "==============================================")
-	localizer.CalculateTarantula()
-	localizer.PrintSuspiciousScores("Tarantula")
-
-	fmt.Println("\n" + "==============================================")
-	localizer.CalculateOchiai()
-	localizer.PrintSuspiciousScores("Ochiai")
-
-	fmt.Println("\n💡 Kết luận:")
-	fmt.Println("- Dòng 2 (max := 0) có điểm nghi ngờ cao vì:")
-	fmt.Println("  • Xuất hiện trong TẤT CẢ failed tests")
-	fmt.Println("  • KHÔNG phân biệt giữa passed và failed → Điểm cao")
-	fmt.Println("- Lỗi: Khởi tạo max = 0, không xử lý mảng toàn số âm")
-	fmt.Println("- Sửa: max := arr[0]")
-	fmt.Println("\n🎯 Quan sát:")
-	fmt.Println("- Dòng 4 (if arr[i] > max) KHÔNG xuất hiện trong failed tests")
-	fmt.Println("  → Vì arr[i] luôn < 0, không bao giờ > max (0)")
-	fmt.Println("  → Điều này chứng tỏ lỗi ở khởi tạo max = 0!")
-
-	fmt.Println("\n📊 Ứng dụng Fault Localization:")
-	fmt.Println("✓ Tự động phát hiện vị trí có khả năng chứa lỗi")
-	fmt.Println("✓ Giảm thời gian debug")
-	fmt.Println("✓ Ưu tiên kiểm tra các dòng có điểm cao")
-	fmt.Println("✓ Kết hợp với test suite để phân tích")
-
-	fmt.Println("\n⚙️  Các kỹ thuật phổ biến:")
-	fmt.Println("• Tarantula: Dựa trên tỷ lệ failed/passed")
-	fmt.Println("• Ochiai: Tương tự Tarantula nhưng dùng công thức khác")
-	fmt.Println("• Jaccard: Đo độ tương đồng giữa failed và passed")
-	fmt.Println("• DStar: Cải tiến của Ochiai với trọng số cao hơn")
+	// Removed - chỉ giữ 1 ví dụ
 }
