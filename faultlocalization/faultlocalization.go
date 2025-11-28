@@ -17,16 +17,16 @@ type TestCase struct {
 
 // StatementScore đại diện cho điểm nghi ngờ của một statement
 type StatementScore struct {
-	LineNumber     int
-	Statement      string
+	LineNumber      int
+	Statement       string
 	SuspiciousScore float64
-	PassedCount    int
-	FailedCount    int
+	PassedCount     int
+	FailedCount     int
 }
 
 // FaultLocalizer thực hiện fault localization
 type FaultLocalizer struct {
-	Statements map[int]string        // Line -> Statement
+	Statements map[int]string // Line -> Statement
 	TestCases  []TestCase
 	Scores     []StatementScore
 }
@@ -120,8 +120,15 @@ func (fl *FaultLocalizer) CalculateTarantula() {
 	}
 
 	// Sắp xếp theo điểm giảm dần
+	// Tie-breaking: Nếu điểm bằng nhau, ưu tiên dòng có failedCount cao hơn,
+	// sau đó mới đến lineNumber nhỏ hơn
 	sort.Slice(fl.Scores, func(i, j int) bool {
 		if math.Abs(fl.Scores[i].SuspiciousScore-fl.Scores[j].SuspiciousScore) < 0.0001 {
+			// Nếu điểm bằng nhau, ưu tiên dòng xuất hiện nhiều hơn trong failed tests
+			if fl.Scores[i].FailedCount != fl.Scores[j].FailedCount {
+				return fl.Scores[i].FailedCount > fl.Scores[j].FailedCount
+			}
+			// Nếu failedCount cũng bằng nhau, chọn dòng có lineNumber nhỏ hơn
 			return fl.Scores[i].LineNumber < fl.Scores[j].LineNumber
 		}
 		return fl.Scores[i].SuspiciousScore > fl.Scores[j].SuspiciousScore
@@ -172,8 +179,14 @@ func (fl *FaultLocalizer) CalculateOchiai() {
 		})
 	}
 
+	// Sắp xếp theo điểm giảm dần với tie-breaking
 	sort.Slice(fl.Scores, func(i, j int) bool {
 		if math.Abs(fl.Scores[i].SuspiciousScore-fl.Scores[j].SuspiciousScore) < 0.0001 {
+			// Nếu điểm bằng nhau, ưu tiên dòng xuất hiện nhiều hơn trong failed tests
+			if fl.Scores[i].FailedCount != fl.Scores[j].FailedCount {
+				return fl.Scores[i].FailedCount > fl.Scores[j].FailedCount
+			}
+			// Nếu failedCount cũng bằng nhau, chọn dòng có lineNumber nhỏ hơn
 			return fl.Scores[i].LineNumber < fl.Scores[j].LineNumber
 		}
 		return fl.Scores[i].SuspiciousScore > fl.Scores[j].SuspiciousScore
@@ -243,9 +256,31 @@ func (fl *FaultLocalizer) PrintSuspiciousScores(method string) {
 	fmt.Println("+------+---------------------------------------+-------+--------+--------+")
 
 	if len(fl.Scores) > 0 {
-		fmt.Printf("\n⚠️  Dòng nghi ngờ nhất: Dòng %d (Score: %.3f)\n",
-			fl.Scores[0].LineNumber,
-			fl.Scores[0].SuspiciousScore)
+		// Tìm tất cả các dòng có điểm cao nhất (bằng điểm đầu tiên)
+		maxScore := fl.Scores[0].SuspiciousScore
+		topLines := []int{fl.Scores[0].LineNumber}
+
+		for i := 1; i < len(fl.Scores); i++ {
+			if math.Abs(fl.Scores[i].SuspiciousScore-maxScore) < 0.0001 {
+				topLines = append(topLines, fl.Scores[i].LineNumber)
+			} else {
+				break
+			}
+		}
+
+		if len(topLines) == 1 {
+			fmt.Printf("\n⚠️  Dòng nghi ngờ nhất: Dòng %d (Score: %.3f)\n",
+				topLines[0], maxScore)
+		} else {
+			fmt.Printf("\n⚠️  Các dòng có điểm nghi ngờ cao nhất (Score: %.3f):\n", maxScore)
+			fmt.Printf("   Dòng: %v\n", topLines)
+			fmt.Printf("   → Ưu tiên: Dòng %d (xuất hiện %d lần trong failed tests)\n",
+				fl.Scores[0].LineNumber, fl.Scores[0].FailedCount)
+			fmt.Println("\n💡 Tie-breaking strategy:")
+			fmt.Println("   1. Điểm nghi ngờ (suspicious score)")
+			fmt.Println("   2. Số lần xuất hiện trong failed tests")
+			fmt.Println("   3. Số dòng nhỏ hơn")
+		}
 	}
 }
 
@@ -320,9 +355,16 @@ func RunFaultLocalizationDemo() {
 	localizer.PrintSuspiciousScores("Ochiai")
 
 	fmt.Println("\n💡 Giải thích:")
-	fmt.Println("- Dòng 6 có điểm nghi ngờ cao nhất")
+	fmt.Println("- Dòng 6 có điểm nghi ngờ cao nhất vì:")
+	fmt.Println("  • Xuất hiện trong TẤT CẢ failed tests (2/2)")
+	fmt.Println("  • Xuất hiện trong TẤT CẢ passed tests (4/4)")
+	fmt.Println("  • Ratio: failed/(failed+passed) cao")
 	fmt.Println("- Lỗi: Chia integer thay vì chia float")
 	fmt.Println("- Sửa: avg := float64(sum) / float64(len(arr))")
+	fmt.Println("\n🔍 Tại sao các dòng khác có cùng điểm?")
+	fmt.Println("- Các dòng như 7, 5, 4, 3 đều được thực thi trong mọi test")
+	fmt.Println("- Chúng có cùng tỷ lệ failed/passed")
+	fmt.Println("- Tie-breaking: Ưu tiên dòng có nhiều failed count và line number nhỏ hơn")
 
 	// Demo 2
 	fmt.Println("\n" + "==============================================")
@@ -382,9 +424,15 @@ func demo2() {
 	localizer.PrintSuspiciousScores("Ochiai")
 
 	fmt.Println("\n💡 Kết luận:")
-	fmt.Println("- Dòng 2 (max := 0) có điểm nghi ngờ cao")
+	fmt.Println("- Dòng 2 (max := 0) có điểm nghi ngờ cao vì:")
+	fmt.Println("  • Xuất hiện trong TẤT CẢ failed tests")
+	fmt.Println("  • KHÔNG phân biệt giữa passed và failed → Điểm cao")
 	fmt.Println("- Lỗi: Khởi tạo max = 0, không xử lý mảng toàn số âm")
 	fmt.Println("- Sửa: max := arr[0]")
+	fmt.Println("\n🎯 Quan sát:")
+	fmt.Println("- Dòng 4 (if arr[i] > max) KHÔNG xuất hiện trong failed tests")
+	fmt.Println("  → Vì arr[i] luôn < 0, không bao giờ > max (0)")
+	fmt.Println("  → Điều này chứng tỏ lỗi ở khởi tạo max = 0!")
 
 	fmt.Println("\n📊 Ứng dụng Fault Localization:")
 	fmt.Println("✓ Tự động phát hiện vị trí có khả năng chứa lỗi")
@@ -398,4 +446,3 @@ func demo2() {
 	fmt.Println("• Jaccard: Đo độ tương đồng giữa failed và passed")
 	fmt.Println("• DStar: Cải tiến của Ochiai với trọng số cao hơn")
 }
-

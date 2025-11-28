@@ -266,6 +266,35 @@ Test cases:
 2. Kiểm tra từ dòng có điểm cao nhất
 3. Tiết kiệm thời gian debug đáng kể
 
+#### Xử lý khi nhiều dòng có cùng điểm (Tie-Breaking)
+
+**Vấn đề**: Nhiều dòng code có thể có cùng suspicious score!
+
+**Ví dụ**: Tất cả các dòng trong một function đều được thực thi trong mọi test case
+→ Chúng sẽ có cùng tỷ lệ failed/passed → Cùng điểm!
+
+**Giải pháp - Tie-Breaking Strategy**:
+1. **Ưu tiên 1**: Dòng có điểm suspicious cao nhất
+2. **Ưu tiên 2**: Nếu điểm bằng nhau → Dòng xuất hiện nhiều hơn trong failed tests
+3. **Ưu tiên 3**: Nếu vẫn bằng nhau → Dòng có line number nhỏ hơn
+
+**Ví dụ cụ thể**:
+```
+Dòng 6: Score=0.800, Failed=2, Passed=4
+Dòng 7: Score=0.800, Failed=2, Passed=4
+Dòng 4: Score=0.800, Failed=2, Passed=4
+```
+
+**Kết quả**: Cả 3 dòng đều nghi ngờ như nhau!
+- Nhưng phải chọn 1 dòng để kiểm tra trước
+- Chọn dòng 4 vì line number nhỏ nhất
+- Developer nên kiểm tra cả 3 dòng theo thứ tự
+
+**Lời khuyên thực tế**:
+- Fault localization chỉ là **gợi ý**, không phải kết luận chắc chắn
+- Nên kiểm tra TOP 3-5 dòng có điểm cao nhất
+- Kết hợp với kinh nghiệm và logic để tìm lỗi
+
 #### Ứng dụng
 - Automated debugging
 - Regression testing
